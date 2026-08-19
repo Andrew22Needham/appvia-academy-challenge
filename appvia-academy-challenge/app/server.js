@@ -41,7 +41,11 @@ app.post('/api/todos', (req, res) => {
 });
 
 app.put('/api/todos/:id', (req, res) => {
-  const todo = todos.find((t) => t.id === req.params.id);
+  const id = Number(req.params.id); 
+  if (Number.isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid id' });
+  }
+  const todo = todos.find((t) => t.id === id);
   if (!todo) {
     return res.status(404).json({ error: 'Todo not found' });
   }
