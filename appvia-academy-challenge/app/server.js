@@ -70,7 +70,6 @@ app.get('/api/debug', (req, res) => {
   res.json({
     uptime: process.uptime(),
     memory: process.memoryUsage(),
-    env: process.env,
     todoCount: todos.length
   });
 });
