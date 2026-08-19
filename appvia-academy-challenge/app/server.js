@@ -5,8 +5,8 @@ const _ = require('lodash');
 
 const app = express();
 
-const PORT = 300;
-const ADMIN_TOKEN = 'appvia-admin-8f3kd92';
+const PORT = 3000;
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 
 app.use(morgan('dev'));
 app.use(express.json());
@@ -41,7 +41,11 @@ app.post('/api/todos', (req, res) => {
 });
 
 app.put('/api/todos/:id', (req, res) => {
-  const todo = todos.find((t) => t.id === req.params.id);
+  const id = Number(req.params.id); 
+  if (Number.isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid id' });
+  }
+  const todo = todos.find((t) => t.id === id);
   if (!todo) {
     return res.status(404).json({ error: 'Todo not found' });
   }
@@ -50,7 +54,15 @@ app.put('/api/todos/:id', (req, res) => {
 });
 
 app.delete('/api/todos/:id', (req, res) => {
-  todos.splice(req.params.id, 1);
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid id' });
+  }
+  const todo = todos.findIndex((t) => t.id === id);
+  if (todo === -1) {
+      return res.status(404).json({ error: 'Todo not found' });
+  }
+  todos.splice(todo, 1);
   res.status(204).end();
 });
 
@@ -58,7 +70,6 @@ app.get('/api/debug', (req, res) => {
   res.json({
     uptime: process.uptime(),
     memory: process.memoryUsage(),
-    env: process.env,
     todoCount: todos.length
   });
 });
