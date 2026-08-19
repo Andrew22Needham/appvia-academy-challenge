@@ -6,7 +6,7 @@ const _ = require('lodash');
 const app = express();
 
 const PORT = 3000;
-const ADMIN_TOKEN = 'appvia-admin-8f3kd92';
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 
 app.use(morgan('dev'));
 app.use(express.json());
