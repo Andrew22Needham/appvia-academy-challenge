@@ -54,7 +54,15 @@ app.put('/api/todos/:id', (req, res) => {
 });
 
 app.delete('/api/todos/:id', (req, res) => {
-  todos.splice(req.params.id, 1);
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid id' });
+  }
+  const todo = todos.findIndex((t) => t.id === id);
+  if (todo === -1) {
+      return res.status(404).json({ error: 'Todo not found' });
+  }
+  todos.splice(todo, 1);
   res.status(204).end();
 });
 
